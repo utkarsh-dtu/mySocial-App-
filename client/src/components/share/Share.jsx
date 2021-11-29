@@ -1,4 +1,5 @@
 // Added Upload feature and it shows the Picture in a clean fashion
+// Added Functionality to show image before uploading and reload after uploading
 
 import React, { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
