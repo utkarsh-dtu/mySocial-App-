@@ -23,6 +23,7 @@ export default function Profile() {
         `http://localhost:8800/api/users?username=${username}`
       );
       setUser(res.data);
+      // console.log("User : ", res.data);
     };
 
     fetchUser();

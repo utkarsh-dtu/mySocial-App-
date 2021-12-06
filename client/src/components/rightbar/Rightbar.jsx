@@ -9,16 +9,30 @@ import { AuthContext } from "../../context/AuthContext";
 import { AiFillPlusSquare, AiFillMinusCircle } from "react-icons/ai";
 
 export default function Rightbar({ user }) {
+  console.log("rightbar user : ", user);
+  // console.log("rightbar user city: ", user.city);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friends, setFriends] = useState([]);
   const { user: currentUser, dispatch } = useContext(AuthContext);
+  // const { user: currentUser, dispatch } = useContext(AuthContext);
+  // const currentUser = useContext(AuthContext).user;
+  // const { dispatch } = useContext(AuthContext);
+
+  // something does not look good here
   const [followed, setFollowed] = useState(
     currentUser.followings.includes(user?._id)
   );
 
-  useEffect(() => {
-    setFollowed(currentUser.followings.includes(user?._id));
-  }, [currentUser, user?._id]);
+  // useEffect(() => {
+  //   setFollowed(currentUser.followings.includes(user?._id));
+  // }, [currentUser, user?._id]);
+
+  // useEffect(() => {
+  //   setFollowed(currentUser.followings.includes(user?._id));
+
+  //   console.log(currentUser._id);
+  //   console.log(user?._id);
+  // }, [currentUser, user?._id]);
 
   useEffect(() => {
     // we were not able to use async in useEffect
@@ -32,32 +46,51 @@ export default function Rightbar({ user }) {
     };
 
     getFriends();
-  }, [user?._id]);
+  }, [user]);
+
+  // creating my faaltu useEffect
+  // useEffect(() => {
+  //   const isFollowing = currentUser.followings.includes()
+  // });
 
   const handleClick = async () => {
+    console.log("followed : ", followed);
+    // console.log("current user :", currentUser);
     try {
       if (followed) {
-        await axios.put("/users/" + user._id + "/unfollow", {
-          userId: currentUser._id,
-        });
+        await axios.put(
+          "http://localhost:8800/api/users/" + user._id + "/unfollow",
+          {
+            userId: currentUser._id,
+          }
+        );
         dispatch({
           type: "UNFOLLOW",
           payload: user._id,
         });
       } else {
-        await axios.put("/users/" + user._id + "/follow", {
-          userId: currentUser._id,
-        });
+        // await axios.put("/users/" + user._id + "/follow", {
+        //   userId: currentUser._id,
+        // });
+        // http://localhost:8800/api/users/61ada1f9a17bda309fde3bdc/follow
+        await axios.put(
+          "http://localhost:8800/api/users/" + user._id + "/follow",
+          {
+            userId: currentUser._id,
+          }
+        );
         dispatch({
           type: "FOLLOW",
           payload: user._id,
         });
       }
+
+      setFollowed(!followed);
     } catch (error) {
       console.log(error);
     }
 
-    setFollowed(!followed);
+    // setFollowed(!followed);
     // dispatch()
   };
 
@@ -84,6 +117,7 @@ export default function Rightbar({ user }) {
 
   const ProfileRightbar = () => {
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    // const isFollowed = currentUser.followings.includes(user?._id);
     return (
       <>
         {user.username !== currentUser.username && (
@@ -92,6 +126,12 @@ export default function Rightbar({ user }) {
             {followed ? <AiFillMinusCircle /> : <AiFillPlusSquare />}
           </button>
         )}
+        {/* {user.username !== currentUser.username && (
+          <button className="rightbarFollowButton" onClick={handleClick}>
+            {isFollowed ? "Unfollow" : "Follow"}
+            {isFollowed ? <AiFillMinusCircle /> : <AiFillPlusSquare />}
+          </button>
+        )} */}
         <h4 className="rightbarTitle">User Information</h4>
         <div className="rightbarInfo">
           <div className="rightbarInfoItem">
